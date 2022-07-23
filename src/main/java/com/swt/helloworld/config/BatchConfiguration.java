@@ -1,6 +1,7 @@
 package com.swt.helloworld.config;
 
 import com.swt.helloworld.listener.HwJobExecutionListener;
+import com.swt.helloworld.listener.HwStepExecutionListener;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.StepContribution;
@@ -20,16 +21,20 @@ public class BatchConfiguration {
   private final JobBuilderFactory jobs;
   private final StepBuilderFactory steps;
   private final HwJobExecutionListener jobExecutionListener;
+  private  final HwStepExecutionListener hwStepExecutionListener;
 
-  public BatchConfiguration(JobBuilderFactory jobs, StepBuilderFactory steps, HwJobExecutionListener jobExecutionListener) {
+  public BatchConfiguration(JobBuilderFactory jobs, StepBuilderFactory steps, HwJobExecutionListener jobExecutionListener,
+      HwStepExecutionListener hwStepExecutionListener) {
     this.jobs = jobs;
     this.steps = steps;
     this.jobExecutionListener = jobExecutionListener;
+    this.hwStepExecutionListener = hwStepExecutionListener;
   }
 
   @Bean
   public Step step1() {
     return steps.get("step1")
+        .listener(hwStepExecutionListener)
         .tasklet(helloWorldTasklet())
         .build();
   }
@@ -46,7 +51,7 @@ public class BatchConfiguration {
     return (new Tasklet() {
       @Override
       public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-        System.out.println("Hello world");
+        System.out.println("helloWorldTasklet - Hello world");
         return RepeatStatus.FINISHED;
       }
     });
