@@ -1,1 +1,3 @@
-/Users/laurenceadams/programming/spring-batch/src/main/java/com/swt/helloworld/HelloworldApplication.java
+/Users/laurenceadams/programming/literate-memory/src/main/java/com/swt/helloworld/HelloworldApplication.java
+/Users/laurenceadams/programming/literate-memory/src/main/java/com/swt/helloworld/listener/HwJobExecutionListener.java
+/Users/laurenceadams/programming/literate-memory/src/main/java/com/swt/helloworld/config/BatchConfiguration.java

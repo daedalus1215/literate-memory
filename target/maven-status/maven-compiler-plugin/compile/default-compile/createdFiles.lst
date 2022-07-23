@@ -1,2 +1,4 @@
+com/swt/helloworld/config/BatchConfiguration.class
+com/swt/helloworld/config/BatchConfiguration$1.class
 com/swt/helloworld/HelloworldApplication.class
-com/swt/helloworld/HelloworldApplication$1.class
+com/swt/helloworld/listener/HwJobExecutionListener.class
