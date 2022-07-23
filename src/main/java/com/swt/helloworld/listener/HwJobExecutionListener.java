@@ -9,6 +9,7 @@ public class HwJobExecutionListener implements org.springframework.batch.core.Jo
   @Override
   public void beforeJob(JobExecution jobExecution) {
     System.out.println("before starting the Job getJobInstance -" + jobExecution.getJobInstance().getJobName());
+    jobExecution.getExecutionContext().put("my name", "yao");
     System.out.println("before starting the Job getExecutionContext - " + jobExecution.getExecutionContext().toString());
   }
 
