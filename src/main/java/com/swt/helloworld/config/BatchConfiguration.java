@@ -2,6 +2,9 @@ package com.swt.helloworld.config;
 
 import com.swt.helloworld.listener.HwJobExecutionListener;
 import com.swt.helloworld.listener.HwStepExecutionListener;
+import com.swt.helloworld.processor.InMemItemProcessor;
+import com.swt.helloworld.reader.InMemReader;
+import com.swt.helloworld.writer.ConsoleItemWriter;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.StepContribution;
@@ -10,6 +13,9 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
+import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.item.ItemReader;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,7 +50,30 @@ public class BatchConfiguration {
     return jobs.get("helloWorldJob")
         .listener(jobExecutionListener)
         .start(step1())
+        .next(step2())
         .build();
+  }
+
+  @Bean
+  public Step step2() {
+    return steps
+        .get("step2")
+        .<Integer, Integer>chunk(3)
+        .reader(reader()).processor(processor()).writer(writer())
+        .build();
+
+  }
+
+  private ItemWriter<? super Integer> writer() {
+    return new ConsoleItemWriter();
+  }
+
+  private ItemProcessor<? super Integer, ? extends Integer> processor() {
+    return new InMemItemProcessor();
+  }
+
+  private ItemReader<? extends Integer> reader() {
+    return new InMemReader();
   }
 
   public Tasklet helloWorldTasklet() {
