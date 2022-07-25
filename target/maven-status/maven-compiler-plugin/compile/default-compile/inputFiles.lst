@@ -1,3 +1,7 @@
+/Users/laurenceadams/programming/literate-memory/src/main/java/com/swt/helloworld/processor/InMemItemProcessor.java
 /Users/laurenceadams/programming/literate-memory/src/main/java/com/swt/helloworld/HelloworldApplication.java
 /Users/laurenceadams/programming/literate-memory/src/main/java/com/swt/helloworld/listener/HwJobExecutionListener.java
+/Users/laurenceadams/programming/literate-memory/src/main/java/com/swt/helloworld/reader/InMemReader.java
+/Users/laurenceadams/programming/literate-memory/src/main/java/com/swt/helloworld/listener/HwStepExecutionListener.java
 /Users/laurenceadams/programming/literate-memory/src/main/java/com/swt/helloworld/config/BatchConfiguration.java
+/Users/laurenceadams/programming/literate-memory/src/main/java/com/swt/helloworld/writer/ConsoleItemWriter.java

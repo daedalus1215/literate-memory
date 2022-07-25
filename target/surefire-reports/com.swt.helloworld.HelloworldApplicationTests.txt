@@ -1,4 +1,10 @@
 -------------------------------------------------------------------------------
 Test set: com.swt.helloworld.HelloworldApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.466 s - in com.swt.helloworld.HelloworldApplicationTests
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 3.687 s <<< FAILURE! - in com.swt.helloworld.HelloworldApplicationTests
+contextLoads  Time elapsed: 0.001 s  <<< ERROR!
+java.lang.IllegalStateException: Failed to load ApplicationContext
+Caused by: java.lang.IllegalStateException: Failed to execute ApplicationRunner
+Caused by: org.springframework.jdbc.BadSqlGrammarException: PreparedStatementCallback; bad SQL grammar [INSERT into BATCH_JOB_EXECUTION(JOB_EXECUTION_ID, JOB_INSTANCE_ID, START_TIME, END_TIME, STATUS, EXIT_CODE, EXIT_MESSAGE, VERSION, CREATE_TIME, LAST_UPDATED, JOB_CONFIGURATION_LOCATION) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)]; nested exception is java.sql.SQLSyntaxErrorException: Unknown column 'JOB_CONFIGURATION_LOCATION' in 'field list'
+Caused by: java.sql.SQLSyntaxErrorException: Unknown column 'JOB_CONFIGURATION_LOCATION' in 'field list'
+
