@@ -88,6 +88,7 @@ public class BatchConfiguration {
                                  setNames(new String[]{
                                      "productID", "productName", "productDesc", "price", "unit"
                                  });
+                                 setDelimiter("|");
                                }
 
                              });
