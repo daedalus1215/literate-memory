@@ -1,17 +1,19 @@
 package com.swt.helloworld.model;
 
+import java.math.BigDecimal;
+
 public class Product {
 
-  private  String productID;
+  private  Integer productID;
   private  String productName;
-  private  String price;
-  private  Integer unit;
   private  String productDesc;
+  private BigDecimal price;
+  private  Integer unit;
 
   public Product() {
   }
 
-  public Product(String productID, String productName, String productDesc, String price, Integer unit) {
+  public Product(Integer productID, String productName, String productDesc, BigDecimal price, Integer unit) {
     this.productID = productID;
     this.productName = productName;
     this.productDesc = productDesc;
@@ -19,43 +21,54 @@ public class Product {
     this.unit = unit;
   }
 
-  public String getProductID() {
+  public Integer getProductID() {
     return productID;
+  }
+
+  public void setProductID(Integer productID) {
+    this.productID = productID;
   }
 
   public String getProductName() {
     return productName;
   }
 
+  public void setProductName(String productName) {
+    this.productName = productName;
+  }
+
   public String getProductDesc() {
     return productDesc;
   }
 
-  public String getPrice() {
+  public void setProductDesc(String productDesc) {
+    this.productDesc = productDesc;
+  }
+
+  public BigDecimal getPrice() {
     return price;
+  }
+
+  public void setPrice(BigDecimal price) {
+    this.price = price;
   }
 
   public Integer getUnit() {
     return unit;
   }
 
-  public void setProductID(String productID) {
-    this.productID = productID;
-  }
-
-  public void setProductName(String productName) {
-    this.productName = productName;
-  }
-
-  public void setPrice(String price) {
-    this.price = price;
-  }
-
   public void setUnit(Integer unit) {
     this.unit = unit;
   }
 
-  public void setProductDesc(String productDesc) {
-    this.productDesc = productDesc;
+  @Override
+  public String toString() {
+    return "Product{" +
+        "productID=" + productID +
+        ", productName='" + productName + '\'' +
+        ", productDesc='" + productDesc + '\'' +
+        ", price=" + price +
+        ", unit=" + unit +
+        '}';
   }
 }

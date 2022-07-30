@@ -80,10 +80,12 @@ public class BatchConfiguration {
     reader.setLineMapper(new DefaultLineMapper<Product>() {
                            {
                              setLineTokenizer(new DelimitedLineTokenizer() {
-                               @Override
-                               public void setNames(String... names) {
-                                 super.setNames("productID", "productName", "productDesc", "price", "unit");
+                               {
+                                 setNames(new String[]{
+                                     "productID", "productName", "productDesc", "price", "unit"
+                                 });
                                }
+
                              });
                              setFieldSetMapper(new BeanWrapperFieldSetMapper<>() {
                                {
