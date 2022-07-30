@@ -65,7 +65,8 @@ public class BatchConfiguration {
     return steps
         .get("step2")
         .<Integer, Integer>chunk(3)
-        .reader(reader()).processor(processor()).writer(writer())
+        .reader(flatFileItemReader())
+        .writer(writer())
         .build();
 
   }
@@ -81,9 +82,7 @@ public class BatchConfiguration {
                              setLineTokenizer(new DelimitedLineTokenizer() {
                                @Override
                                public void setNames(String... names) {
-                                 super.setNames(new String[]{
-                                     "productID", "productName", "ProductDesc", "price,unit"
-                                 });
+                                 super.setNames("productID", "productName", "productDesc", "price", "unit");
                                }
                              });
                              setFieldSetMapper(new BeanWrapperFieldSetMapper<>() {

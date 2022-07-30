@@ -2,16 +2,19 @@ package com.swt.helloworld.model;
 
 public class Product {
 
-  private final String productID;
-  private final String productName;
-  private final String ProductDesc;
-  private final String price;
-  private final Integer unit;
+  private  String productID;
+  private  String productName;
+  private  String price;
+  private  Integer unit;
+  private  String productDesc;
+
+  public Product() {
+  }
 
   public Product(String productID, String productName, String productDesc, String price, Integer unit) {
     this.productID = productID;
     this.productName = productName;
-    ProductDesc = productDesc;
+    this.productDesc = productDesc;
     this.price = price;
     this.unit = unit;
   }
@@ -25,7 +28,7 @@ public class Product {
   }
 
   public String getProductDesc() {
-    return ProductDesc;
+    return productDesc;
   }
 
   public String getPrice() {
@@ -34,5 +37,25 @@ public class Product {
 
   public Integer getUnit() {
     return unit;
+  }
+
+  public void setProductID(String productID) {
+    this.productID = productID;
+  }
+
+  public void setProductName(String productName) {
+    this.productName = productName;
+  }
+
+  public void setPrice(String price) {
+    this.price = price;
+  }
+
+  public void setUnit(Integer unit) {
+    this.unit = unit;
+  }
+
+  public void setProductDesc(String productDesc) {
+    this.productDesc = productDesc;
   }
 }
