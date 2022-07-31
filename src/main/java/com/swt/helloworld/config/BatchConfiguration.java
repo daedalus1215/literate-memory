@@ -21,8 +21,11 @@ import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.item.file.FlatFileItemWriter;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
+import org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor;
+import org.springframework.batch.item.file.transform.DelimitedLineAggregator;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,7 +37,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 @EnableBatchProcessing
 @Configuration
 public class BatchConfiguration {
-
   private final JobBuilderFactory jobs;
   private final StepBuilderFactory steps;
   private final HwJobExecutionListener jobExecutionListener;
@@ -84,8 +86,8 @@ public class BatchConfiguration {
         .get("step2")
         .<Integer, Integer>chunk(3)
 //        .reader(flatFileItemReader(null))
-        .reader(jdbcCursorItemReader())
-        .writer(writer())
+        .reader(flatFileItemReader(null))
+        .writer(flatFileItemWriter(null))
         .build();
 
   }
@@ -97,7 +99,9 @@ public class BatchConfiguration {
     FlatFileItemReader reader = new FlatFileItemReader();
     // step 1, let reader know where the file is.
     reader.setResource(inputFile);
-    // step 2, create the line Mapper
+    // step 2, skip the header
+    reader.setLinesToSkip(1);
+    // step 3, create the line Mapper
     reader.setLineMapper(new DefaultLineMapper<Product>() {
                            {
                              setLineTokenizer(new DelimitedLineTokenizer() {
@@ -105,7 +109,6 @@ public class BatchConfiguration {
                                  setNames(new String[]{
                                      "productID", "productName", "productDesc", "price", "unit"
                                  });
-                                 setDelimiter("|");
                                }
 
                              });
@@ -117,9 +120,24 @@ public class BatchConfiguration {
                            }
                          }
     );
-    // step 3, skip the header
-    reader.setLinesToSkip(1);
     return reader;
+  }
+
+  @StepScope
+  @Bean
+  public FlatFileItemWriter flatFileItemWriter(@Value("#{jobParameters['outputFile']}") FileSystemResource outputFile) {
+    FlatFileItemWriter writer = new FlatFileItemWriter();
+    writer.setResource(outputFile);
+    writer.setLineAggregator(new DelimitedLineAggregator() {
+      {
+        setDelimiter("|");
+        setFieldExtractor(new BeanWrapperFieldExtractor() {{
+          setNames(new String[]{"productID", "productName", "productDesc", "price", "unit"
+          });
+        }});
+      }
+    });
+    return writer;
   }
 
   private ItemWriter<? super Integer> writer() {
