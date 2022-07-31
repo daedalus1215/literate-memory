@@ -6,6 +6,7 @@ import com.swt.helloworld.model.Product;
 import com.swt.helloworld.processor.InMemItemProcessor;
 import com.swt.helloworld.reader.InMemReader;
 import com.swt.helloworld.writer.ConsoleItemWriter;
+import javax.sql.DataSource;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.StepContribution;
@@ -18,6 +19,7 @@ import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
@@ -27,6 +29,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 
 @EnableBatchProcessing
 @Configuration
@@ -36,13 +39,15 @@ public class BatchConfiguration {
   private final StepBuilderFactory steps;
   private final HwJobExecutionListener jobExecutionListener;
   private final HwStepExecutionListener hwStepExecutionListener;
+  private final DataSource dataSource;
 
   public BatchConfiguration(JobBuilderFactory jobs, StepBuilderFactory steps, HwJobExecutionListener jobExecutionListener,
-      HwStepExecutionListener hwStepExecutionListener) {
+      HwStepExecutionListener hwStepExecutionListener, DataSource dataSource) {
     this.jobs = jobs;
     this.steps = steps;
     this.jobExecutionListener = jobExecutionListener;
     this.hwStepExecutionListener = hwStepExecutionListener;
+    this.dataSource = dataSource;
   }
 
   @Bean
@@ -63,11 +68,23 @@ public class BatchConfiguration {
   }
 
   @Bean
+  public JdbcCursorItemReader jdbcCursorItemReader() {
+    JdbcCursorItemReader reader = new JdbcCursorItemReader();
+    reader.setDataSource(this.dataSource);
+    reader.setSql("select * from products");
+    reader.setRowMapper(new BeanPropertyRowMapper() {{
+      setMappedClass(Product.class);
+    }});
+    return reader;
+  }
+
+  @Bean
   public Step step2() {
     return steps
         .get("step2")
         .<Integer, Integer>chunk(3)
-        .reader(flatFileItemReader(null))
+//        .reader(flatFileItemReader(null))
+        .reader(jdbcCursorItemReader())
         .writer(writer())
         .build();
 
