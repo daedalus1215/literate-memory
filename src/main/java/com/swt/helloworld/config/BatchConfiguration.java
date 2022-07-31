@@ -71,7 +71,7 @@ public class BatchConfiguration {
   public JdbcCursorItemReader jdbcCursorItemReader() {
     JdbcCursorItemReader reader = new JdbcCursorItemReader();
     reader.setDataSource(this.dataSource);
-    reader.setSql("select * from products");
+    reader.setSql("select prod_id as product_id, prod_name as product_name, prod_desc as product_desc, unit, price from products");
     reader.setRowMapper(new BeanPropertyRowMapper() {{
       setMappedClass(Product.class);
     }});
