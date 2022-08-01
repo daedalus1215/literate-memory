@@ -6,6 +6,8 @@ import com.swt.helloworld.model.Product;
 import com.swt.helloworld.processor.InMemItemProcessor;
 import com.swt.helloworld.reader.InMemReader;
 import com.swt.helloworld.writer.ConsoleItemWriter;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import javax.sql.DataSource;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -19,6 +21,8 @@ import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.database.ItemPreparedStatementSetter;
+import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.FlatFileItemWriter;
@@ -85,9 +89,9 @@ public class BatchConfiguration {
     return steps
         .get("step2")
         .<Integer, Integer>chunk(3)
-//        .reader(flatFileItemReader(null))
         .reader(flatFileItemReader(null))
-        .writer(flatFileItemWriter(null))
+//        .reader(flatFileItemReader(null))
+        .writer(dbWriter())
         .build();
 
   }
@@ -137,6 +141,24 @@ public class BatchConfiguration {
         }});
       }
     });
+    return writer;
+  }
+
+  public JdbcBatchItemWriter dbWriter() {
+    JdbcBatchItemWriter writer = new JdbcBatchItemWriter();
+    writer.setDataSource(this.dataSource);
+    writer.setSql("insert into spring.products (prod_id, prod_name, prod_desc, unit, price) VALUES  (?, ?, ?, ?, ?)");
+    writer.setItemPreparedStatementSetter(new ItemPreparedStatementSetter<Product>() {
+      @Override
+      public void setValues(Product item, PreparedStatement preparedStatement) throws SQLException {
+        preparedStatement.setInt(1, item.getProductID());
+        preparedStatement.setString(2, item.getProductName());
+        preparedStatement.setString(3, item.getProductDesc());
+        preparedStatement.setBigDecimal(4, item.getPrice());
+        preparedStatement.setInt(5, item.getUnit());
+      }
+    });
+
     return writer;
   }
 
