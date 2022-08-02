@@ -24,6 +24,7 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.ItemPreparedStatementSetter;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.JdbcCursorItemReader;
+import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.FlatFileItemWriter;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
@@ -91,7 +92,7 @@ public class BatchConfiguration {
         .<Integer, Integer>chunk(3)
         .reader(flatFileItemReader(null))
 //        .reader(flatFileItemReader(null))
-        .writer(dbWriter())
+        .writer(dbWriter2())
         .build();
 
   }
@@ -160,6 +161,15 @@ public class BatchConfiguration {
     });
 
     return writer;
+  }
+
+  @Bean
+  public JdbcBatchItemWriter dbWriter2() {
+    return new JdbcBatchItemWriterBuilder<Product>()
+        .dataSource(this.dataSource)
+        .sql("insert into spring.products (prod_id, prod_name, prod_desc, unit, price) VALUES  (:productID, :productName, :productDesc, :price, :unit)")
+        .beanMapped()
+        .build();
   }
 
   private ItemWriter<? super Integer> writer() {
