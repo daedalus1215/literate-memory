@@ -4,6 +4,7 @@ import com.swt.helloworld.listener.HwJobExecutionListener;
 import com.swt.helloworld.listener.HwStepExecutionListener;
 import com.swt.helloworld.model.Product;
 import com.swt.helloworld.processor.InMemItemProcessor;
+import com.swt.helloworld.processors.UppercaseProcessor;
 import com.swt.helloworld.reader.InMemReader;
 import com.swt.helloworld.writer.ConsoleItemWriter;
 import java.sql.PreparedStatement;
@@ -91,6 +92,7 @@ public class BatchConfiguration {
         .get("step2")
         .<Integer, Integer>chunk(3)
         .reader(flatFileItemReader(null))
+        .processor(new UppercaseProcessor())
 //        .reader(flatFileItemReader(null))
         .writer(dbWriter2())
         .build();
