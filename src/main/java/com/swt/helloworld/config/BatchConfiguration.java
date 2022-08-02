@@ -2,6 +2,7 @@ package com.swt.helloworld.config;
 
 import com.swt.helloworld.listener.HwJobExecutionListener;
 import com.swt.helloworld.listener.HwStepExecutionListener;
+import com.swt.helloworld.listener.SkipListener;
 import com.swt.helloworld.model.Product;
 import com.swt.helloworld.processor.InMemItemProcessor;
 import com.swt.helloworld.processors.UppercaseProcessor;
@@ -18,9 +19,11 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.scope.context.ChunkContext;
+import org.springframework.batch.core.step.skip.AlwaysSkipItemSkipPolicy;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
+import org.springframework.batch.item.ItemReaderException;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.ItemPreparedStatementSetter;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
@@ -97,7 +100,10 @@ public class BatchConfiguration {
 //        .reader(flatFileItemReader(null))
         .faultTolerant()
         .skip(FlatFileFormatException.class)
-        .skipLimit(3)
+        .skip(ItemReaderException.class)
+        .skipLimit(1)
+//        .skipPolicy(new AlwaysSkipItemSkipPolicy())
+        .listener(new SkipListener())
         .writer(dbWriter2())
         .build();
 
