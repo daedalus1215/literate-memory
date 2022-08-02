@@ -33,6 +33,7 @@ import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor;
 import org.springframework.batch.item.file.transform.DelimitedLineAggregator;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
+import org.springframework.batch.item.file.transform.FlatFileFormatException;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -94,6 +95,8 @@ public class BatchConfiguration {
         .reader(flatFileItemReader(null))
         .processor(new UppercaseProcessor())
 //        .reader(flatFileItemReader(null))
+        .faultTolerant()
+        .skip(FlatFileFormatException.class)
         .writer(dbWriter2())
         .build();
 
