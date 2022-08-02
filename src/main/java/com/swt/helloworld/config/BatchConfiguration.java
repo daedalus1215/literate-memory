@@ -97,6 +97,7 @@ public class BatchConfiguration {
 //        .reader(flatFileItemReader(null))
         .faultTolerant()
         .skip(FlatFileFormatException.class)
+        .skipLimit(3)
         .writer(dbWriter2())
         .build();
 
